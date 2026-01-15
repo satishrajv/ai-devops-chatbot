@@ -13,7 +13,14 @@
       "Bash(chmod:*)",
       "Bash(docker-compose:*)",
       "Bash(python test_local.py:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(git commit:*)",
+      "Bash(docker --version:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(curl:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker logs:*)"
     ]
   }
 }
