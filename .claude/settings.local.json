@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.\\\\venv\\\\Scripts\\\\pip install:*)",
+      "Bash(streamlit run:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nPhase 1: AI DevOps Platform\n\n- Streamlit dashboard to trigger/monitor Jenkins jobs\n- Flask sample app with health check and API endpoints\n- Jenkinsfile for CI/CD pipeline \\(lint, test, build, deploy\\)\n- Docker configuration \\(single container for Flask + Streamlit\\)\n- GitHub webhook setup instructions in README\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(cat:*)",
+      "Bash(chmod:*)",
+      "Bash(docker-compose:*)",
+      "Bash(python test_local.py:*)",
+      "Bash(python:*)"
+    ]
+  }
+}

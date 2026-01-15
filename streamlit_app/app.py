@@ -138,8 +138,44 @@ def get_all_jobs():
     return []
 
 
+def get_build_log(job_name, build_number):
+    """Get console output/logs from a specific build"""
+    if not st.session_state['auth']:
+        return None
+
+    try:
+        response = requests.get(
+            f"{jenkins_url}/job/{job_name}/{build_number}/consoleText",
+            auth=st.session_state['auth'],
+            timeout=10
+        )
+        if response.status_code == 200:
+            return response.text
+    except Exception:
+        pass
+    return None
+
+
+def get_queue_info():
+    """Get information about queued builds"""
+    if not st.session_state['auth']:
+        return []
+
+    try:
+        response = requests.get(
+            f"{jenkins_url}/queue/api/json",
+            auth=st.session_state['auth'],
+            timeout=10
+        )
+        if response.status_code == 200:
+            return response.json().get('items', [])
+    except Exception:
+        pass
+    return []
+
+
 # Tab layout
-tab1, tab2, tab3 = st.tabs(["🎯 Trigger Jobs", "📊 Job Status", "📋 All Jobs"])
+tab1, tab2, tab3, tab4 = st.tabs(["🎯 Trigger Jobs", "📊 Job Status", "📋 All Jobs", "📝 Build Logs"])
 
 with tab1:
     st.subheader("Trigger a Jenkins Job")
@@ -233,6 +269,54 @@ with tab3:
                                 st.error("Failed")
             else:
                 st.info("No jobs found or unable to connect to Jenkins.")
+
+with tab4:
+    st.subheader("Build Logs")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        log_job_name = st.text_input(
+            "Job Name",
+            value="ai-devops-pipeline",
+            key="log_job"
+        )
+    with col2:
+        log_build_number = st.text_input(
+            "Build Number",
+            value="lastBuild",
+            help="Enter build number or use 'lastBuild', 'lastSuccessfulBuild', 'lastFailedBuild'"
+        )
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("📥 Fetch Logs", type="primary", use_container_width=True):
+            with st.spinner("Fetching build logs..."):
+                logs = get_build_log(log_job_name, log_build_number)
+
+                if logs:
+                    st.success(f"Logs retrieved for {log_job_name} #{log_build_number}")
+                    st.code(logs, language="text", line_numbers=False)
+                else:
+                    st.error("Could not fetch logs. Check job name, build number, and credentials.")
+
+    with col2:
+        if st.button("🔄 Auto-refresh", use_container_width=True):
+            st.session_state['auto_refresh'] = not st.session_state.get('auto_refresh', False)
+
+    with col3:
+        if st.button("📊 Queue Status", use_container_width=True):
+            queue_items = get_queue_info()
+            if queue_items:
+                st.info(f"Builds in queue: {len(queue_items)}")
+                for item in queue_items:
+                    st.write(f"- {item.get('task', {}).get('name', 'Unknown')}")
+            else:
+                st.success("No builds in queue")
+
+    if st.session_state.get('auto_refresh', False):
+        st.info("Auto-refresh enabled. Logs will update every 5 seconds.")
+        time.sleep(5)
+        st.rerun()
 
 # Footer
 st.markdown("---")

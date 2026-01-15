@@ -17,10 +17,14 @@ services:
       - JENKINS_TOKEN=${JENKINS_TOKEN:-}
     networks:
       - devops-network
+    depends_on:
+      - jenkins
 
-  # Jenkins CI/CD Server (optional - comment out if not needed)
+  # Jenkins CI/CD Server
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: .
+      dockerfile: jenkins.Dockerfile
     container_name: jenkins
     privileged: true
     user: root
