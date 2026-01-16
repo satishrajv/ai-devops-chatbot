@@ -40,7 +40,7 @@ jenkins_token = st.sidebar.text_input(
 
 # Main content
 st.title("🚀 AI DevOps Platform")
-st.markdown("### Trigger and Monitor Jenkins CI/CD Pipelines")
+st.markdown("### Trigger and Monitor Jenkins CI/CD Pipelines - 5 minutes")
 
 # Store credentials in session state
 if jenkins_user and jenkins_token:
@@ -321,7 +321,7 @@ with tab4:
 # Footer
 st.markdown("---")
 st.markdown(
-    "**AI DevOps Platform** | "
+    "**AI DevOps Platform - UI** | "
     "[GitHub](https://github.com/satishrajv/AI-DevOps-chatbot) | "
     "Built with Streamlit"
 )
