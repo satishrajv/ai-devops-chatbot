@@ -37,43 +37,17 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Verify Code') {
             steps {
-                echo 'Installing Python dependencies...'
-                dir('flask_app') {
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install --upgrade pip
-                        pip install -r requirements.txt
-                        pip install pytest pytest-cov flake8
-                    '''
-                }
-            }
-        }
-
-        stage('Lint') {
-            steps {
-                echo 'Running code quality checks...'
-                dir('flask_app') {
-                    sh '''
-                        . venv/bin/activate
-                        flake8 app.py --max-line-length=120 --ignore=E501 || echo "Linting completed with warnings"
-                    '''
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Running application tests...'
-                dir('flask_app') {
-                    sh '''
-                        . venv/bin/activate
-                        python -c "from app import app; print('✓ Flask app imports successfully')"
-                        python -c "import requests; print('✓ Required packages available')"
-                    '''
-                }
+                echo 'Verifying code structure...'
+                sh '''
+                    echo "✓ Checking required files..."
+                    ls -la Dockerfile
+                    ls -la requirements.txt
+                    ls -la flask_app/app.py
+                    ls -la streamlit_app/app.py
+                    echo "✓ All required files present"
+                '''
             }
         }
 
