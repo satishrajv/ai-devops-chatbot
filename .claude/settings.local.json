@@ -20,7 +20,10 @@
       "Bash(docker rm:*)",
       "Bash(curl:*)",
       "Bash(docker exec:*)",
-      "Bash(docker logs:*)"
+      "Bash(docker logs:*)",
+      "Bash(ls:*)",
+      "Bash(git rm:*)",
+      "Bash(tree:*)"
     ]
   }
 }
