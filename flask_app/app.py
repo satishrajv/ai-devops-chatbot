@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return jsonify({
-        "message": "Welcome to AI DevOps Platform",
+        "message": "Welcome to AI DevOps Platform - UI",
         "version": "1.0.0",
         "status": "running"
     })
