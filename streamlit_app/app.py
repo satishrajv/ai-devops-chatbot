@@ -16,27 +16,10 @@ st.set_page_config(
     layout="wide"
 )
 
-# Sidebar configuration
-st.sidebar.title("Jenkins Configuration")
-
-jenkins_url = st.sidebar.text_input(
-    "Jenkins URL",
-    value=os.getenv("JENKINS_URL", "http://localhost:8080"),
-    help="Base URL of your Jenkins server"
-)
-
-jenkins_user = st.sidebar.text_input(
-    "Jenkins Username",
-    value=os.getenv("JENKINS_USER", ""),
-    help="Jenkins username for API authentication"
-)
-
-jenkins_token = st.sidebar.text_input(
-    "Jenkins API Token",
-    type="password",
-    value=os.getenv("JENKINS_TOKEN", ""),
-    help="Jenkins API token (generate from User > Configure > API Token)"
-)
+# Jenkins configuration - hardcoded credentials
+jenkins_url = "http://35.174.138.165:8080"
+jenkins_user = "admin"
+jenkins_token = "0b94639151854a66bf03c6467e5a7101"
 
 # Main content
 st.title("🚀 AI DevOps Platform")
