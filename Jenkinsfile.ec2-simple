@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'ai-devops-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
+        S3_BUCKET = 'jenkins-logs-aidevops-2026'
     }
 
     triggers {
@@ -153,6 +154,30 @@ pipeline {
                 }
             }
         }
+
+        stage('Upload Logs to S3') {
+            steps {
+                script {
+                    echo 'Uploading logs to S3...'
+                    def timestamp = new Date().format('yyyyMMdd-HHmmss')
+                    def dateFolder = new Date().format('yyyy/MM/dd')
+
+                    sh """
+                        # Upload Jenkins build log
+                        aws s3 cp /var/lib/jenkins/jobs/ai-devops-pipeline/builds/${BUILD_NUMBER}/log \
+                            s3://${S3_BUCKET}/jenkins/builds/${dateFolder}/build-${BUILD_NUMBER}-${timestamp}.log
+
+                        # Upload Docker container logs
+                        docker logs ai-devops-app > /tmp/docker-${BUILD_NUMBER}.log 2>&1
+                        aws s3 cp /tmp/docker-${BUILD_NUMBER}.log \
+                            s3://${S3_BUCKET}/docker/ai-devops-app/${dateFolder}/app-${BUILD_NUMBER}-${timestamp}.log
+                        rm -f /tmp/docker-${BUILD_NUMBER}.log
+
+                        echo "✓ Logs uploaded to S3: s3://${S3_BUCKET}"
+                    """
+                }
+            }
+        }
     }
 
     post {
@@ -161,14 +186,29 @@ pipeline {
             ✓ Pipeline completed successfully!
             ✓ Build #${BUILD_NUMBER} deployed
             ✓ Applications are running
+            ✓ Logs uploaded to S3
             """
         }
         failure {
-            echo """
-            ✗ Pipeline failed!
-            ✗ Check the logs above for details
-            ✗ Build #${BUILD_NUMBER}
-            """
+            script {
+                echo """
+                ✗ Pipeline failed!
+                ✗ Check the logs above for details
+                ✗ Build #${BUILD_NUMBER}
+                """
+
+                // Upload failure logs to S3
+                def timestamp = new Date().format('yyyyMMdd-HHmmss')
+                def dateFolder = new Date().format('yyyy/MM/dd')
+
+                sh """
+                    # Upload Jenkins build log even on failure
+                    aws s3 cp /var/lib/jenkins/jobs/ai-devops-pipeline/builds/${BUILD_NUMBER}/log \
+                        s3://${S3_BUCKET}/jenkins/failures/${dateFolder}/build-${BUILD_NUMBER}-${timestamp}.log || true
+
+                    echo "✓ Failure logs uploaded to S3"
+                """
+            }
         }
         always {
             echo 'Cleaning up old Docker images...'
