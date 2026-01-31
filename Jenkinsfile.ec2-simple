@@ -6,89 +6,51 @@ pipeline {
         DOCKER_TAG = "${BUILD_NUMBER}"
         S3_BUCKET = 'jenkins-logs-aidevops-2026'
 
-        // Credentials (stored in Jenkins Credentials)
+        // Static configuration (not sensitive)
         JENKINS_URL = 'http://35.174.138.165:8080'
-        OPENAI_API_KEY = credentials('openai-api-key')
-        WEAVIATE_URL = credentials('weaviate-url')
-        WEAVIATE_API_KEY = credentials('weaviate-api-key')
-        AWS_KB_ACCESS_KEY = credentials('aws-kb-access-key-id')
-        AWS_KB_SECRET_KEY = credentials('aws-kb-secret-access-key')
-    }
+        AWS_REGION = 'us-east-1'
+        WEAVIATE_COLLECTION_NAME = 'JenkinsKnowledgeBase'
+        S3_KB_BUCKET = 'jenkins-kb'
 
-    triggers {
-        pollSCM('H */5 * * *')  // Check GitHub every 5 hours for changes
+        // Secret name in AWS Secrets Manager
+        SECRET_NAME = 'ai-devops-platform/credentials'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo "Checking out code from GitHub..."
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: "*/main"]],
-                    userRemoteConfigs: [[url: 'https://github.com/satishrajv/AI-DevOps-chatbot.git']]
-                ])
-            }
-        }
-
-        stage('Build Info') {
-            steps {
-                echo "=========================================="
-                echo "Build #${BUILD_NUMBER}"
-                echo "Building AI DevOps Platform (Full Stack)"
-                echo "=========================================="
-                sh '''
-                    echo "Docker version:"
-                    docker --version
-                    echo "Python version:"
-                    python3 --version
-                    echo "Checking Weaviate connectivity..."
-                    curl -I ${WEAVIATE_URL}/v1/.well-known/ready || echo "Weaviate check skipped"
-                '''
-            }
-        }
-
-        stage('Verify Code') {
-            steps {
-                echo 'Verifying code structure...'
-                sh '''
-                    echo "✓ Checking required files..."
-                    ls -la Dockerfile
-                    ls -la flask_app/app.py
-                    ls -la streamlit_app/app.py
-                    ls -la kb-rag/config.py
-                    ls -la kb-sync/kb_sync_agent.py
-                    echo "✓ All required files present"
-                '''
+                echo 'Checking out code from GitHub...'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image: ${DOCKER_IMAGE}:${DOCKER_TAG}"
-                echo "Including: Flask + Streamlit + kb-rag + kb-sync"
                 script {
                     sh """
-                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -f Dockerfile .
+                        docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
                         docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
                     """
                 }
             }
         }
 
-        stage('Stop Old Containers') {
+        stage('Stop Old Container') {
             steps {
-                echo 'Stopping and removing old containers...'
-                sh '''
-                    docker stop ai-devops-app || true
-                    docker rm ai-devops-app || true
-                '''
+                echo 'Stopping and removing old container (if exists)...'
+                script {
+                    sh '''
+                        docker stop ai-devops-app || true
+                        docker rm ai-devops-app || true
+                    '''
+                }
             }
         }
 
         stage('Deploy Application') {
             steps {
-                echo 'Deploying Full Stack to EC2...'
+                echo 'Deploying Full Stack to EC2 with AWS Secrets Manager...'
                 script {
                     sh """
                         docker run -d \
@@ -99,63 +61,45 @@ pipeline {
                             -e ENVIRONMENT=production \
                             -e BUILD_NUMBER=${BUILD_NUMBER} \
                             -e JENKINS_URL=${JENKINS_URL} \
-                            -e JENKINS_USER=admin \
-                            -e JENKINS_TOKEN=\${JENKINS_API_TOKEN} \
-                            -e OPENAI_API_KEY=${OPENAI_API_KEY} \
-                            -e WEAVIATE_URL=${WEAVIATE_URL} \
-                            -e WEAVIATE_API_KEY=${WEAVIATE_API_KEY} \
-                            -e WEAVIATE_COLLECTION_NAME=JenkinsKnowledgeBase \
-                            -e AWS_ACCESS_KEY_ID=${AWS_KB_ACCESS_KEY} \
-                            -e AWS_SECRET_ACCESS_KEY=${AWS_KB_SECRET_KEY} \
-                            -e AWS_REGION=us-east-1 \
-                            -e S3_KB_BUCKET=jenkins-kb \
-                            ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            -e AWS_REGION=${AWS_REGION} \
+                            -e SECRET_NAME=${SECRET_NAME} \
+                            -e WEAVIATE_COLLECTION_NAME=${WEAVIATE_COLLECTION_NAME} \
+                            -e S3_KB_BUCKET=${S3_KB_BUCKET} \
+                            ${DOCKER_IMAGE}:${DOCKER_TAG} \
+                            /app/start-with-secrets.sh
                     """
-
-                    echo "Waiting for applications to start..."
-                    sleep(15)
                 }
             }
         }
 
         stage('Health Check') {
             steps {
-                echo 'Running health checks...'
+                echo 'Waiting for services to start...'
+                sleep 10
+
+                echo 'Checking Flask API health...'
                 script {
-                    // Check Flask app
                     def flaskHealth = sh(
-                        script: 'curl -f http://localhost:5000/health',
+                        script: 'curl -f http://localhost:5000/health || exit 1',
                         returnStatus: true
                     )
-
                     if (flaskHealth == 0) {
-                        echo "✓ Flask app is healthy on port 5000"
+                        echo "✓ Flask API is healthy"
                     } else {
-                        error "✗ Flask app health check failed"
+                        error "✗ Flask API health check failed"
                     }
+                }
 
-                    // Check Streamlit
+                echo 'Checking Streamlit UI...'
+                script {
                     def streamlitHealth = sh(
-                        script: 'curl -f http://localhost:8501/_stcore/health',
+                        script: 'curl -f http://localhost:8501 || exit 1',
                         returnStatus: true
                     )
-
                     if (streamlitHealth == 0) {
-                        echo "✓ Streamlit app is healthy on port 8501"
+                        echo "✓ Streamlit UI is healthy"
                     } else {
-                        echo "⚠ Streamlit health check failed (may need more time)"
-                    }
-
-                    // Check container is running
-                    def containerRunning = sh(
-                        script: 'docker ps | grep ai-devops-app',
-                        returnStatus: true
-                    )
-
-                    if (containerRunning == 0) {
-                        echo "✓ Application container is running"
-                    } else {
-                        error "✗ Application container is not running"
+                        echo "⚠ Streamlit health check failed (may still be starting)"
                     }
                 }
             }
@@ -168,8 +112,11 @@ pipeline {
                     def kbSyncResult = sh(
                         script: '''
                             docker exec ai-devops-app bash -c "
-                                cd /app/kb-sync && \
-                                python kb_sync_agent.py
+                                # Source the secrets
+                                eval \\$(python3 /app/scripts/fetch_secrets.py)
+
+                                # Run kb-sync
+                                cd /app/kb-sync && python kb_sync_agent.py
                             "
                         ''',
                         returnStatus: true
@@ -184,57 +131,18 @@ pipeline {
             }
         }
 
-        stage('Display Access Info') {
-            steps {
-                script {
-                    def ec2Ip = "35.174.138.165"
-                    echo """
-                    ==========================================
-                    🚀 DEPLOYMENT SUCCESSFUL!
-                    ==========================================
-
-                    📍 Access Your Applications:
-
-                    Jenkins:        http://${ec2Ip}:8080
-                    Flask API:      http://${ec2Ip}:5000
-                    Streamlit UI:   http://${ec2Ip}:8501
-
-                    Features Enabled:
-                    ✓ Jenkins Integration
-                    ✓ RAG Chatbot (in Streamlit)
-                    ✓ Weaviate Cloud Connected
-                    ✓ Knowledge Base Synced
-
-                    Health Endpoints:
-                    Flask:     http://${ec2Ip}:5000/health
-                    Streamlit: http://${ec2Ip}:8501/_stcore/health
-
-                    Build: #${BUILD_NUMBER}
-                    ==========================================
-                    """
-                }
-            }
-        }
-
         stage('Upload Logs to S3') {
             steps {
+                echo 'Uploading build logs to S3...'
                 script {
-                    echo 'Uploading logs to S3...'
-                    def timestamp = new Date().format('yyyyMMdd-HHmmss')
-                    def dateFolder = new Date().format('yyyy/MM/dd')
-
                     sh """
-                        # Upload Jenkins build log
-                        aws s3 cp /var/lib/jenkins/jobs/ai-devops-pipeline/builds/${BUILD_NUMBER}/log \
-                            s3://${S3_BUCKET}/jenkins/builds/${dateFolder}/build-${BUILD_NUMBER}-${timestamp}.log
+                        # Create log file
+                        echo "Build #${BUILD_NUMBER} - \$(date)" > build-${BUILD_NUMBER}.log
+                        echo "Status: SUCCESS" >> build-${BUILD_NUMBER}.log
+                        echo "Docker Image: ${DOCKER_IMAGE}:${DOCKER_TAG}" >> build-${BUILD_NUMBER}.log
 
-                        # Upload Docker container logs
-                        docker logs ai-devops-app > /tmp/docker-${BUILD_NUMBER}.log 2>&1
-                        aws s3 cp /tmp/docker-${BUILD_NUMBER}.log \
-                            s3://${S3_BUCKET}/docker/ai-devops-app/${dateFolder}/app-${BUILD_NUMBER}-${timestamp}.log
-                        rm -f /tmp/docker-${BUILD_NUMBER}.log
-
-                        echo "✓ Logs uploaded to S3: s3://${S3_BUCKET}"
+                        # Upload to S3 (EC2 instance should have IAM role)
+                        aws s3 cp build-${BUILD_NUMBER}.log s3://${S3_BUCKET}/builds/ || echo "S3 upload failed"
                     """
                 }
             }
@@ -243,37 +151,24 @@ pipeline {
 
     post {
         success {
-            echo """
-            ✓ Pipeline completed successfully!
-            ✓ Build #${BUILD_NUMBER} deployed
-            ✓ All applications are running
-            ✓ KB Sync completed
-            ✓ Logs uploaded to S3
-            """
+            echo '=========================================='
+            echo '✓ Deployment Successful!'
+            echo '=========================================='
+            echo "Flask API: http://35.174.138.165:5000"
+            echo "Streamlit UI: http://35.174.138.165:8501"
+            echo "Build: #${BUILD_NUMBER}"
+            echo '=========================================='
         }
         failure {
-            script {
-                echo """
-                ✗ Pipeline failed!
-                ✗ Check the logs above for details
-                ✗ Build #${BUILD_NUMBER}
-                """
-
-                // Upload failure logs to S3
-                def timestamp = new Date().format('yyyyMMdd-HHmmss')
-                def dateFolder = new Date().format('yyyy/MM/dd')
-
-                sh """
-                    aws s3 cp /var/lib/jenkins/jobs/ai-devops-pipeline/builds/${BUILD_NUMBER}/log \
-                        s3://${S3_BUCKET}/jenkins/failures/${dateFolder}/build-${BUILD_NUMBER}-${timestamp}.log || true
-                    echo "✓ Failure logs uploaded to S3"
-                """
-            }
+            echo '=========================================='
+            echo '✗ Deployment Failed!'
+            echo '=========================================='
+            echo "Check logs at: http://35.174.138.165:8080/job/${JOB_NAME}/${BUILD_NUMBER}/console"
         }
         always {
             echo 'Cleaning up old Docker images...'
             sh '''
-                docker image prune -f || true
+                docker image prune -f --filter "until=24h" || true
             '''
         }
     }

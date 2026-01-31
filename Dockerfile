@@ -26,8 +26,10 @@ COPY streamlit_app/ ./streamlit_app/
 COPY kb-rag/ ./kb-rag/
 COPY kb-sync/ ./kb-sync/
 COPY docs/ ./docs/
+COPY scripts/ ./scripts/
 COPY start.sh .
-RUN chmod +x start.sh
+COPY start-with-secrets.sh .
+RUN chmod +x start.sh start-with-secrets.sh
 
 # Environment variables - Jenkins
 ENV JENKINS_URL=http://localhost:8080
