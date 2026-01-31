@@ -1,6 +1,44 @@
-# AI DevOps Platform - Phase 1
+# 🚀 AI DevOps Platform
 
-A Streamlit-based dashboard to trigger and monitor Jenkins CI/CD pipelines, with a sample Flask application for deployment.
+**Production-ready AI-powered DevOps platform with Jenkins monitoring, RAG chatbot, and knowledge base management.**
+
+**Deploy to EC2 in 10 minutes** | **Uses Weaviate Cloud** | **All-in-One Container**
+
+---
+
+## ⚡ Quick Start - EC2 Deployment (Your Setup)
+
+Deploy all 4 apps to your **existing EC2 instance** `35.174.138.165`:
+
+```bash
+# 1. Configure Jenkins credentials (5 secrets)
+# 2. Push code
+git add .
+git commit -m "Deploy full stack to EC2"
+git push origin main
+
+# 3. Jenkins auto-deploys
+# Access: http://35.174.138.165:8501
+```
+
+**What you get**:
+- ✅ Flask API (port 5000)
+- ✅ Streamlit Dashboard (port 8501)
+- ✅ RAG Chatbot (integrated in Streamlit)
+- ✅ KB Sync agent (scheduled via Jenkins)
+- ✅ Weaviate Cloud connection
+
+**Cost**: $0 EC2 (existing) + $25/month Weaviate + $10-50 OpenAI = **~$35-75/month**
+
+📚 **Complete Guide**: [EC2_SETUP_GUIDE.md](EC2_SETUP_GUIDE.md) | [DEPLOYMENT_SUMMARY.md](DEPLOYMENT_SUMMARY.md)
+
+---
+
+## 📖 What This Platform Does
+
+A Streamlit-based dashboard to trigger and monitor Jenkins CI/CD pipelines, featuring an intelligent RAG (Retrieval-Augmented Generation) chatbot for DevOps troubleshooting.
+
+**Live on your EC2**: http://35.174.138.165:8501
 
 ## Project Structure
 

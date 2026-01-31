@@ -329,7 +329,7 @@ company-cicd/
 **Bad (DON'T DO):**
 ```groovy
 environment {
-  AWS_KEY = "AKIAIOSFODNN7EXAMPLE"  // ❌ NEVER!
+  AWS_KEY = "your-aws-key-here"      // ❌ NEVER!
   PASSWORD = "secret123"             // ❌ NEVER!
 }
 ```

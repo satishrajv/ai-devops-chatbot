@@ -1,7 +1,0 @@
-# Flask backend
-Flask==3.0.0
-gunicorn==21.2.0
-
-# Streamlit frontend
-streamlit==1.29.0
-requests==2.31.0

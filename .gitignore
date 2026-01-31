@@ -1,6 +1,12 @@
-# Environment files
+# Environment files - NEVER commit these!
 .env
-*.env.local
+.env.local
+.env.*.local
+*.env
+*/.env
+kb-sync/.env
+streamlit_app/.env
+kb-rag/.env
 
 # Python
 __pycache__/
@@ -8,9 +14,19 @@ __pycache__/
 *$py.class
 venv/
 .venv/
+env/
+ENV/
 *.egg-info/
 dist/
 build/
+.pytest_cache/
+
+# Virtual environments (including corrupted/orphaned ones)
+#/
+(once)/
+Create/
+**/venv/
+**/.venv/
 
 # IDE
 .idea/
@@ -27,3 +43,19 @@ Thumbs.db
 
 # Jenkins
 jenkins_home/
+
+# Temporary files
+tmp*/
+tmpclaude-*
+*.tmp
+*.temp
+
+# Logs
+logs/
+*.log
+**/*.log
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3

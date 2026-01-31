@@ -23,7 +23,10 @@
       "Bash(docker logs:*)",
       "Bash(ls:*)",
       "Bash(git rm:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(ssh:*)",
+      "Bash(test:*)",
+      "Bash(du -sh:*)"
     ]
   }
 }
