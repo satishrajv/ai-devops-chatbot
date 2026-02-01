@@ -17,6 +17,27 @@ pipeline {
     }
 
     stages {
+        stage('Cleanup Disk Space') {
+            steps {
+                echo 'Freeing up disk space before build...'
+                script {
+                    sh '''
+                        echo "Disk usage before cleanup:"
+                        df -h /
+
+                        echo "Cleaning up Docker resources..."
+                        docker container prune -f || true
+                        docker image prune -a -f || true
+                        docker volume prune -f || true
+                        docker builder prune -a -f || true
+
+                        echo "Disk usage after cleanup:"
+                        df -h /
+                    '''
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
