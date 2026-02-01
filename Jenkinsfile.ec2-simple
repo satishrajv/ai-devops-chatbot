@@ -126,32 +126,6 @@ pipeline {
             }
         }
 
-        stage('Run KB Sync') {
-            steps {
-                echo 'Running Knowledge Base Sync...'
-                script {
-                    def kbSyncResult = sh(
-                        script: '''
-                            docker exec ai-devops-app bash -c "
-                                # Source the secrets
-                                eval \\$(python3 /app/scripts/fetch_secrets.py)
-
-                                # Run kb-sync
-                                cd /app/kb-sync && python kb_sync_agent.py
-                            "
-                        ''',
-                        returnStatus: true
-                    )
-
-                    if (kbSyncResult == 0) {
-                        echo "✓ KB Sync completed successfully"
-                    } else {
-                        echo "⚠ KB Sync had issues (check logs)"
-                    }
-                }
-            }
-        }
-
         stage('Upload Logs to S3') {
             steps {
                 echo 'Uploading build logs to S3...'
