@@ -26,7 +26,18 @@
       "Bash(tree:*)",
       "Bash(ssh:*)",
       "Bash(test:*)",
-      "Bash(du -sh:*)"
+      "Bash(du -sh:*)",
+      "Bash(bash setup-secrets-manager.sh:*)",
+      "Bash(where:*)",
+      "Bash(aws:*)",
+      "Bash(pip install:*)",
+      "Bash(MY_IP=\"172.56.22.85/32\":*)",
+      "Bash(SG_ID=\"sg-0c56c1da72e818832\")",
+      "Bash(__NEW_LINE_1a8680c96fddd131__ echo \"Current IP: $MY_IP\")",
+      "Bash(echo:*)",
+      "Bash(NEW_IP=\"44.201.162.249\")",
+      "Bash(icacls:*)",
+      "Bash(start http://44.201.162.249:8501)"
     ]
   }
 }

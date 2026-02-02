@@ -70,6 +70,6 @@ aws ec2 describe-security-groups \
 
 echo ""
 echo "Your applications should now be accessible at:"
-echo "  Jenkins:   http://35.174.138.165:8080"
-echo "  Flask:     http://35.174.138.165:5000"
-echo "  Streamlit: http://35.174.138.165:8501"
+echo "  Jenkins:   http://44.201.162.249:8080"
+echo "  Flask:     http://44.201.162.249:5000"
+echo "  Streamlit: http://44.201.162.249:8501"

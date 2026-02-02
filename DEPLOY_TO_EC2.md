@@ -1,6 +1,6 @@
 # 🚀 Deploy to AWS EC2 - Complete Guide
 
-**Deploy all 4 apps (Flask, Streamlit, kb-rag, kb-sync) to your EC2 instance `35.174.138.165`**
+**Deploy all 4 apps (Flask, Streamlit, kb-rag, kb-sync) to your EC2 instance `44.201.162.249`**
 
 ---
 
@@ -26,7 +26,7 @@ Before deploying, you need:
   - `AWS_SECRET_ACCESS_KEY`: ...
 
 ### 4. Jenkins API Token
-- Your existing Jenkins: http://35.174.138.165:8080
+- Your existing Jenkins: http://44.201.162.249:8080
 - User → Configure → API Token → Generate
 - Note down: `JENKINS_TOKEN`: ...
 
@@ -36,7 +36,7 @@ Before deploying, you need:
 
 ### Step 1: Add Credentials to Jenkins
 
-1. Open Jenkins: http://35.174.138.165:8080
+1. Open Jenkins: http://44.201.162.249:8080
 2. Go to: **Manage Jenkins** → **Credentials** → **(global)** → **Add Credentials**
 
 Add these 5 credentials (Type: **Secret text**):
@@ -73,7 +73,7 @@ git push origin main
 **Option A: Wait for Auto-Deploy** (Jenkins checks every 5 hours)
 
 **Option B: Trigger Manually**
-1. Go to Jenkins: http://35.174.138.165:8080
+1. Go to Jenkins: http://44.201.162.249:8080
 2. Click on **ai-devops-pipeline** job
 3. Click **Build Now**
 
@@ -102,9 +102,9 @@ Building AI DevOps Platform (Full Stack)
 
 📍 Access Your Applications:
 
-Jenkins:        http://35.174.138.165:8080
-Flask API:      http://35.174.138.165:5000
-Streamlit UI:   http://35.174.138.165:8501
+Jenkins:        http://44.201.162.249:8080
+Flask API:      http://44.201.162.249:5000
+Streamlit UI:   http://44.201.162.249:8501
 
 Features Enabled:
 ✓ Jenkins Integration
@@ -121,7 +121,7 @@ Features Enabled:
 ### Test 1: Flask API
 
 ```bash
-curl http://35.174.138.165:5000/health
+curl http://44.201.162.249:5000/health
 ```
 
 **Expected**: `{"status": "healthy"}`
@@ -130,7 +130,7 @@ curl http://35.174.138.165:5000/health
 
 ### Test 2: Streamlit Dashboard
 
-**Open in browser**: http://35.174.138.165:8501
+**Open in browser**: http://44.201.162.249:8501
 
 **You should see**:
 - Jenkins pipeline triggers
@@ -141,7 +141,7 @@ curl http://35.174.138.165:5000/health
 
 ### Test 3: RAG Chatbot
 
-1. Open Streamlit: http://35.174.138.165:8501
+1. Open Streamlit: http://44.201.162.249:8501
 2. Find the **RAG Chatbot** interface (sidebar or main page)
 3. Type question: **"What causes OutOfMemoryError?"**
 4. Click **Submit** or **Send**
@@ -154,7 +154,7 @@ curl http://35.174.138.165:5000/health
 
 ```bash
 # SSH to EC2
-ssh -i your-key.pem ec2-user@35.174.138.165
+ssh -i your-key.pem ec2-user@44.201.162.249
 
 # Check container running
 docker ps | grep ai-devops-app
@@ -175,7 +175,7 @@ curl http://localhost:8501/_stcore/health
 
 ```bash
 # SSH to EC2
-ssh -i your-key.pem ec2-user@35.174.138.165
+ssh -i your-key.pem ec2-user@44.201.162.249
 
 # Run KB Sync manually
 docker exec ai-devops-app bash -c "cd /app/kb-sync && python kb_sync_agent.py"
@@ -212,7 +212,7 @@ docker exec ai-devops-app bash -c "cd /app/kb-sync && python kb_sync_agent.py"
 
 **SSH to EC2 and check**:
 ```bash
-ssh -i your-key.pem ec2-user@35.174.138.165
+ssh -i your-key.pem ec2-user@44.201.162.249
 
 # Check container status
 docker ps -a | grep ai-devops-app
@@ -247,7 +247,7 @@ docker rm ai-devops-app || true
 
 **Test Weaviate connection from EC2**:
 ```bash
-ssh -i your-key.pem ec2-user@35.174.138.165
+ssh -i your-key.pem ec2-user@44.201.162.249
 
 # Test Weaviate
 docker exec ai-devops-app bash -c "
@@ -275,7 +275,7 @@ print(\"OpenAI connection OK\")
 
 **Check S3 access**:
 ```bash
-ssh -i your-key.pem ec2-user@35.174.138.165
+ssh -i your-key.pem ec2-user@44.201.162.249
 
 # Test S3 access
 docker exec ai-devops-app bash -c "
@@ -321,7 +321,7 @@ git push origin main
 ## 📊 What's Running on EC2
 
 ```
-EC2 Instance: 35.174.138.165
+EC2 Instance: 44.201.162.249
 ├── Jenkins (port 8080) - Already running
 └── Docker Container: ai-devops-app
     ├── Flask API (port 5000)
@@ -350,8 +350,8 @@ Before deploying:
 
 After deploying:
 - [ ] Jenkins build succeeded
-- [ ] Flask API responds: http://35.174.138.165:5000/health
-- [ ] Streamlit UI loads: http://35.174.138.165:8501
+- [ ] Flask API responds: http://44.201.162.249:5000/health
+- [ ] Streamlit UI loads: http://44.201.162.249:8501
 - [ ] RAG Chatbot visible in Streamlit
 - [ ] Can ask questions and get answers
 - [ ] KB Sync completed successfully
@@ -362,9 +362,9 @@ After deploying:
 ## ✅ Success!
 
 **Access your applications**:
-- **Streamlit Dashboard**: http://35.174.138.165:8501
-- **Flask API**: http://35.174.138.165:5000
-- **Jenkins**: http://35.174.138.165:8080
+- **Streamlit Dashboard**: http://44.201.162.249:8501
+- **Flask API**: http://44.201.162.249:5000
+- **Jenkins**: http://44.201.162.249:8080
 
 **Features working**:
 - ✅ Jenkins integration
@@ -383,7 +383,7 @@ After deploying:
 1. Add credentials to Jenkins (one-time)
 2. Push code to GitHub
 3. Jenkins auto-deploys to EC2
-4. Access at http://35.174.138.165:8501
+4. Access at http://44.201.162.249:8501
 5. Test RAG chatbot
 
 **No local testing needed - deploy directly to cloud!** ✨

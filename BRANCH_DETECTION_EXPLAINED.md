@@ -212,7 +212,7 @@ Jenkinsfile Line 19: branches: [[name: "*/main"]]
 
 ### **Check Jenkins UI Config:**
 
-1. Go to: http://35.174.138.165:8080/job/ai-devops-pipeline/configure
+1. Go to: http://44.201.162.249:8080/job/ai-devops-pipeline/configure
 2. Scroll to **Pipeline** section
 3. Look for:
    - **Repository URL:** Should show your GitHub URL

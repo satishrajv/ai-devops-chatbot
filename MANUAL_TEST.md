@@ -18,7 +18,7 @@ https://console.weaviate.cloud/
 
 ```bash
 # Copy to root directory: .env
-JENKINS_URL=http://35.174.138.165:8080
+JENKINS_URL=http://44.201.162.249:8080
 JENKINS_USER=admin
 JENKINS_TOKEN=your_jenkins_token
 
@@ -104,7 +104,7 @@ git commit -m "Deploy to EC2"
 git push origin main
 
 # Jenkins auto-detects and deploys
-# Access: http://35.174.138.165:8501
+# Access: http://44.201.162.249:8501
 ```
 
 ---

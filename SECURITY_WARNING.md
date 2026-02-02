@@ -32,13 +32,13 @@ cp kb-sync/.env.example kb-sync/.env
 **Status**: ✅ Fixed - Now uses environment variables
 
 **Previous Issue**: Jenkins credentials were hardcoded at lines 23-26
-- Jenkins URL: `http://35.174.138.165:8080`
+- Jenkins URL: `http://44.201.162.249:8080`
 - Jenkins User: `admin`
 - Jenkins Token: `0b94639151854a66bf03c6467e5a7101`
 
 **Action Required**: Rotate Jenkins API token
 ```bash
-# 1. Log into Jenkins at http://35.174.138.165:8080
+# 1. Log into Jenkins at http://44.201.162.249:8080
 # 2. Go to User > Configure > API Token
 # 3. Revoke token: 0b94639151854a66bf03c6467e5a7101
 # 4. Generate new token
@@ -76,7 +76,7 @@ cp .env.example .env
 nano .env
 
 # 3. Set the following:
-JENKINS_URL=http://35.174.138.165:8080
+JENKINS_URL=http://44.201.162.249:8080
 JENKINS_USER=admin
 JENKINS_TOKEN=<your_new_jenkins_token_here>
 OPENAI_API_KEY=<your_openai_api_key>
@@ -122,7 +122,7 @@ nano .env
 - [ ] Update both `kb-sync/.env` and `streamlit_app/.env`
 
 ### Jenkins API Token
-- [ ] Log into Jenkins: http://35.174.138.165:8080
+- [ ] Log into Jenkins: http://44.201.162.249:8080
 - [ ] Go to User (admin) > Configure
 - [ ] Navigate to API Token section
 - [ ] Revoke token: `0b94639151854a66bf03c6467e5a7101`
@@ -243,7 +243,7 @@ pre-commit run --all-files
 
 **Before** (insecure):
 ```python
-jenkins_url = "http://35.174.138.165:8080"
+jenkins_url = "http://44.201.162.249:8080"
 jenkins_user = "admin"
 jenkins_token = "0b94639151854a66bf03c6467e5a7101"
 ```
@@ -278,7 +278,7 @@ cp .env.example .env
 streamlit run app.py
 
 # Option 2: Using environment variables (recommended for production)
-export JENKINS_URL="http://35.174.138.165:8080"
+export JENKINS_URL="http://44.201.162.249:8080"
 export JENKINS_USER="admin"
 export JENKINS_TOKEN="your_new_token_here"
 export OPENAI_API_KEY="your_key_here"

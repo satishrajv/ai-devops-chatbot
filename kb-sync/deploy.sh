@@ -12,7 +12,7 @@ echo "==========================================="
 echo ""
 
 # Configuration
-EC2_HOST="ubuntu@35.174.138.165"
+EC2_HOST="ubuntu@44.201.162.249"
 PEM_FILE="C:/Users/Yashvi/myec2_jenkins.pem"
 REMOTE_DIR="/home/ubuntu/kb-sync"
 CRON_SCHEDULE="*/5 * * * *"  # Every 5 minutes

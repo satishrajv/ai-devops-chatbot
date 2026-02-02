@@ -4,8 +4,8 @@ Complete guide to set up your Jenkins pipeline on EC2 using the simplified Jenki
 
 ## 📋 Prerequisites Checklist
 
-- ✅ EC2 Instance running (35.174.138.165)
-- ✅ Jenkins installed and accessible (http://35.174.138.165:8080)
+- ✅ EC2 Instance running (44.201.162.249)
+- ✅ Jenkins installed and accessible (http://44.201.162.249:8080)
 - ✅ Docker installed on EC2
 - ✅ SSH access configured
 - ✅ GitHub repository: https://github.com/satishrajv/AI-DevOps-chatbot.git
@@ -58,7 +58,7 @@ aws ec2 authorize-security-group-ingress \
 SSH into your EC2 and verify Docker is working:
 
 ```bash
-ssh -i "myec2_jenkins.pem" ubuntu@35.174.138.165
+ssh -i "myec2_jenkins.pem" ubuntu@44.201.162.249
 
 # Check Docker
 docker --version
@@ -74,7 +74,7 @@ sudo systemctl restart jenkins
 
 ### Step 3: Create Jenkins Pipeline Job
 
-1. **Open Jenkins**: http://35.174.138.165:8080
+1. **Open Jenkins**: http://44.201.162.249:8080
 2. **Login** with your admin credentials
 3. **Click "New Item"**
 4. **Job Configuration:**
@@ -133,7 +133,7 @@ Once the build succeeds, verify your applications are running:
 
 ```bash
 # Check from EC2
-ssh -i "myec2_jenkins.pem" ubuntu@35.174.138.165
+ssh -i "myec2_jenkins.pem" ubuntu@44.201.162.249
 
 # Verify container is running
 docker ps | grep ai-devops-app
@@ -146,11 +146,11 @@ docker logs ai-devops-app
 ```
 
 **Access from your browser:**
-- Jenkins: http://35.174.138.165:8080
-- Flask App: http://35.174.138.165:5000
-- Flask Health: http://35.174.138.165:5000/health
-- Flask API Info: http://35.174.138.165:5000/api/info
-- Streamlit Dashboard: http://35.174.138.165:8501
+- Jenkins: http://44.201.162.249:8080
+- Flask App: http://44.201.162.249:5000
+- Flask Health: http://44.201.162.249:5000/health
+- Flask API Info: http://44.201.162.249:5000/api/info
+- Streamlit Dashboard: http://44.201.162.249:8501
 
 ## 🔄 Automatic Builds
 
@@ -186,7 +186,7 @@ git push origin main
 
 ### Check Application Logs
 ```bash
-ssh -i "myec2_jenkins.pem" ubuntu@35.174.138.165
+ssh -i "myec2_jenkins.pem" ubuntu@44.201.162.249
 docker logs -f ai-devops-app
 ```
 
@@ -198,7 +198,7 @@ docker logs -f ai-devops-app
 
 **Solution:**
 ```bash
-ssh -i "myec2_jenkins.pem" ubuntu@35.174.138.165
+ssh -i "myec2_jenkins.pem" ubuntu@44.201.162.249
 sudo usermod -aG docker jenkins
 sudo systemctl restart jenkins
 ```
@@ -245,7 +245,7 @@ docker rm ai-devops-app
 2. Look for SCM polling errors
 3. Verify GitHub is accessible from EC2:
 ```bash
-ssh -i "myec2_jenkins.pem" ubuntu@35.174.138.165
+ssh -i "myec2_jenkins.pem" ubuntu@44.201.162.249
 curl -I https://github.com/satishrajv/AI-DevOps-chatbot.git
 ```
 
@@ -263,7 +263,7 @@ Instead of polling every 5 minutes, GitHub can trigger builds instantly:
 2. **Configure GitHub Webhook:**
    - Go to: https://github.com/satishrajv/AI-DevOps-chatbot/settings/hooks
    - Add webhook
-   - Payload URL: `http://35.174.138.165:8080/github-webhook/`
+   - Payload URL: `http://44.201.162.249:8080/github-webhook/`
    - Content type: `application/json`
    - Events: Push events
    - Save
@@ -282,7 +282,7 @@ Configure build notifications (email, Slack, etc.):
 ### Monitor with Streamlit Dashboard
 
 Your Streamlit dashboard can monitor Jenkins:
-1. Open: http://35.174.138.165:8501
+1. Open: http://44.201.162.249:8501
 2. Configure Jenkins credentials in sidebar:
    - URL: http://localhost:8080
    - Username: (your Jenkins user)
