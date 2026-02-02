@@ -357,18 +357,18 @@ with tab5:
         st.markdown("**💡 Try asking:**")
         example_cols = st.columns(2)
         with example_cols[0]:
-            if st.button("What causes OutOfMemoryError?", use_container_width=True):
-                st.session_state.example_question = "What causes OutOfMemoryError?"
+            if st.button("What causes OutOfMemoryError?", use_container_width=True, key="ex1"):
+                st.session_state.pending_question = "What causes OutOfMemoryError?"
                 st.rerun()
-            if st.button("How to prevent OOM errors?", use_container_width=True):
-                st.session_state.example_question = "How to prevent OOM errors?"
+            if st.button("How to prevent OOM errors?", use_container_width=True, key="ex2"):
+                st.session_state.pending_question = "How to prevent OOM errors?"
                 st.rerun()
         with example_cols[1]:
-            if st.button("How do I fix Jenkins build failures?", use_container_width=True):
-                st.session_state.example_question = "How do I fix Jenkins build failures?"
+            if st.button("How do I fix Jenkins build failures?", use_container_width=True, key="ex3"):
+                st.session_state.pending_question = "How do I fix Jenkins build failures?"
                 st.rerun()
-            if st.button("What are symptoms of memory issues?", use_container_width=True):
-                st.session_state.example_question = "What are symptoms of memory issues?"
+            if st.button("What are symptoms of memory issues?", use_container_width=True, key="ex4"):
+                st.session_state.pending_question = "What are symptoms of memory issues?"
                 st.rerun()
 
         st.divider()
@@ -407,117 +407,75 @@ with tab5:
                     </div>
                     """, unsafe_allow_html=True)
 
-        # Chat input
-        user_input = None
+        # Text input for questions (using text_input instead of chat_input)
+        st.markdown("### 💬 Ask a Question")
+        user_input = st.text_input("Type your question here and press Enter:", key="chat_input", label_visibility="collapsed", placeholder="Type your question here...")
 
-        # Check if example question was clicked
-        if 'example_question' in st.session_state:
-            user_input = st.session_state.example_question
-            del st.session_state.example_question
-        else:
-            user_input = st.chat_input("Type your question here...")
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            if st.button("🗑️ Clear Chat History", use_container_width=True):
+                st.session_state.chat_messages = []
+                st.session_state.total_queries = 0
+                st.session_state.total_tokens = 0
+                st.rerun()
+        with col2:
+            send_button = st.button("Send 📤", type="primary", use_container_width=True)
 
-        if user_input:
+        # Process question from example button click
+        if 'pending_question' in st.session_state:
+            user_input = st.session_state.pending_question
+            del st.session_state.pending_question
+
+        # Handle user input
+        if (user_input and send_button) or (user_input and 'pending_question' in st.session_state):
             # Add user message to history
             st.session_state.chat_messages.append({
                 "role": "user",
                 "content": user_input
             })
 
-            # Display user message
-            with st.chat_message("user"):
-                st.markdown(user_input)
-
             # Generate response
-            with st.chat_message("assistant"):
-                message_placeholder = st.empty()
+            with st.spinner('🔍 Searching knowledge base...'):
+                start_time = time.time()
 
-                # Show thinking animation
-                with st.spinner('🔍 Searching knowledge base...'):
-                    start_time = time.time()
+                try:
+                    # Call LangGraph chatbot
+                    response = st.session_state.chatbot.ask(user_input)
 
-                    try:
-                        # Call LangGraph chatbot
-                        response = st.session_state.chatbot.ask(user_input)
+                    end_time = time.time()
+                    response_time = end_time - start_time
 
-                        end_time = time.time()
-                        response_time = end_time - start_time
+                    # Get answer
+                    answer = response['answer']
+                    tokens_used = response.get('tokens_used', {}).get('total', 0)
 
-                        # Display answer with typing effect
-                        answer = response['answer']
-                        displayed_text = ""
+                    # Update session state
+                    st.session_state.total_queries += 1
+                    st.session_state.total_tokens += tokens_used
 
-                        for char in answer:
-                            displayed_text += char
-                            message_placeholder.markdown(displayed_text + "▌")
-                            time.sleep(0.01)  # Typing effect
+                    # Add assistant message to history
+                    st.session_state.chat_messages.append({
+                        "role": "assistant",
+                        "content": answer,
+                        "sources": response['sources'],
+                        "metadata": {
+                            'chunks_used': response['chunks_used'],
+                            'tokens_used': response.get('tokens_used', {}),
+                            'confidence': response['confidence'],
+                            'response_time': response_time,
+                            'is_fallback': response['is_fallback']
+                        }
+                    })
 
-                        message_placeholder.markdown(answer)
+                    st.rerun()
 
-                        # Display sources
-                        if response['sources']:
-                            with st.expander("📚 Sources", expanded=True):
-                                for source in response['sources']:
-                                    st.markdown(f"""
-                                    <div style="background-color: #fff3e0; padding: 0.5rem; border-radius: 0.3rem; margin: 0.3rem 0; border-left: 3px solid #ff9800;">
-                                        📄 <strong>{source['filename']}</strong><br>
-                                        Relevance: {source['relevance']:.0%}
-                                    </div>
-                                    """, unsafe_allow_html=True)
-
-                        # Display metadata
-                        tokens_used = response.get('tokens_used', {}).get('total', 0)
-
-                        st.markdown(f"""
-                        <div>
-                            <span style="background-color: #e8f5e9; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; margin: 0.2rem;">
-                                🎯 Chunks: {response['chunks_used']}
-                            </span>
-                            <span style="background-color: #e8f5e9; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; margin: 0.2rem;">
-                                🔢 Tokens: {tokens_used}
-                            </span>
-                            <span style="background-color: #e8f5e9; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; margin: 0.2rem;">
-                                📊 Confidence: {response['confidence']:.0%}
-                            </span>
-                            <span style="background-color: #e8f5e9; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; margin: 0.2rem;">
-                                ⏱️ Time: {response_time:.2f}s
-                            </span>
-                            {'<span style="background-color: #fff3e0; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-size: 0.8rem; margin: 0.2rem;">⚠️ Fallback</span>' if response['is_fallback'] else ''}
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                        # Update session state
-                        st.session_state.total_queries += 1
-                        st.session_state.total_tokens += tokens_used
-
-                        # Add assistant message to history
-                        st.session_state.chat_messages.append({
-                            "role": "assistant",
-                            "content": answer,
-                            "sources": response['sources'],
-                            "metadata": {
-                                'chunks_used': response['chunks_used'],
-                                'tokens_used': response.get('tokens_used', {}),
-                                'confidence': response['confidence'],
-                                'response_time': response_time,
-                                'is_fallback': response['is_fallback']
-                            }
-                        })
-
-                    except Exception as e:
-                        error_message = f"❌ Error: {str(e)}"
-                        message_placeholder.error(error_message)
-                        st.session_state.chat_messages.append({
-                            "role": "assistant",
-                            "content": error_message
-                        })
-
-        # Clear chat button
-        if st.button("🗑️ Clear Chat History", use_container_width=True):
-            st.session_state.chat_messages = []
-            st.session_state.total_queries = 0
-            st.session_state.total_tokens = 0
-            st.rerun()
+                except Exception as e:
+                    error_message = f"❌ Error: {str(e)}"
+                    st.session_state.chat_messages.append({
+                        "role": "assistant",
+                        "content": error_message
+                    })
+                    st.rerun()
 
 # Footer
 st.markdown("---")
