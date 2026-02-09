@@ -37,7 +37,12 @@
       "Bash(echo:*)",
       "Bash(NEW_IP=\"44.201.162.249\")",
       "Bash(icacls:*)",
-      "Bash(start http://44.201.162.249:8501)"
+      "Bash(start http://44.201.162.249:8501)",
+      "Bash(start http://44.201.162.249:8080/job/ai-devops-pipeline/)",
+      "Bash(dir:*)",
+      "Bash(ping:*)",
+      "Bash(nslookup:*)",
+      "Bash(python3:*)"
     ]
   }
 }

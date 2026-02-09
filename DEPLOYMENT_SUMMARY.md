@@ -24,7 +24,7 @@
 ## 🎯 Deployment Architecture
 
 ```
-EC2 Instance: 44.201.162.249
+EC2 Instance: 100.30.102.67
 ├── Jenkins (port 8080) ← Already running
 └── Docker Container: ai-devops-app
     ├── Flask API → port 5000
@@ -78,9 +78,9 @@ git push origin main
 
 ### 4. Access
 
-- **Streamlit Dashboard**: http://44.201.162.249:8501
-- **Flask API**: http://44.201.162.249:5000
-- **Jenkins**: http://44.201.162.249:8080
+- **Streamlit Dashboard**: http://100.30.102.67:8501
+- **Flask API**: http://100.30.102.67:5000
+- **Jenkins**: http://100.30.102.67:8080
 
 ---
 
@@ -104,10 +104,10 @@ git push origin main
 docker ps | grep ai-devops-app
 
 # Check Flask
-curl http://44.201.162.249:5000/health
+curl http://100.30.102.67:5000/health
 
 # Check Streamlit (browser)
-http://44.201.162.249:8501
+http://100.30.102.67:8501
 
 # Check logs
 docker logs -f ai-devops-app
@@ -144,7 +144,7 @@ The Dockerfile and Jenkinsfile now handle these:
 
 ```bash
 # Jenkins
-JENKINS_URL=http://44.201.162.249:8080
+JENKINS_URL=http://100.30.102.67:8080
 JENKINS_USER=admin
 JENKINS_TOKEN=<from Jenkins credentials>
 
@@ -216,4 +216,4 @@ S3_KB_BUCKET=jenkins-kb
 
 **🎉 Your EC2 now runs the complete AI DevOps Platform!**
 
-**Access**: http://44.201.162.249:8501
+**Access**: http://100.30.102.67:8501

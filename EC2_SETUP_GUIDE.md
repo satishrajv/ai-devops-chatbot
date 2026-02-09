@@ -2,7 +2,7 @@
 
 **Deploy all 4 apps (Flask, Streamlit, kb-rag, kb-sync) to your existing EC2 instance**
 
-Your current setup: EC2 instance `44.201.162.249` with Jenkins running
+Your current setup: EC2 instance `100.30.102.67` with Jenkins running
 
 ---
 
@@ -96,7 +96,7 @@ git push origin main
 SSH into your EC2 instance:
 
 ```bash
-ssh -i your-key.pem ec2-user@44.201.162.249
+ssh -i your-key.pem ec2-user@100.30.102.67
 
 # Pull latest code
 cd AI-DevOps-chatbot
@@ -115,7 +115,7 @@ docker run -d \
     --restart unless-stopped \
     -p 5000:5000 \
     -p 8501:8501 \
-    -e JENKINS_URL=http://44.201.162.249:8080 \
+    -e JENKINS_URL=http://100.30.102.67:8080 \
     -e JENKINS_USER=admin \
     -e JENKINS_TOKEN=your_jenkins_token \
     -e OPENAI_API_KEY=sk-your_key \
@@ -142,15 +142,15 @@ docker logs -f ai-devops-app
 docker ps | grep ai-devops-app
 
 # Check Flask API
-curl http://44.201.162.249:5000/health
+curl http://100.30.102.67:5000/health
 
 # Check Streamlit (in browser)
-# http://44.201.162.249:8501
+# http://100.30.102.67:8501
 ```
 
 ### Test RAG Chatbot
 
-1. Open Streamlit: `http://44.201.162.249:8501`
+1. Open Streamlit: `http://100.30.102.67:8501`
 2. You should see RAG Chatbot interface in the sidebar or main page
 3. Ask a question: "What causes OutOfMemoryError?"
 4. Should get answer from knowledge base
@@ -170,7 +170,7 @@ docker logs ai-devops-app | grep "KB Sync"
 ## 📊 Application Structure on EC2
 
 ```
-EC2 Instance (44.201.162.249)
+EC2 Instance (100.30.102.67)
 ├── Jenkins (port 8080) - Already running
 └── Docker Container: ai-devops-app
     ├── Flask API (port 5000)
@@ -220,7 +220,7 @@ pipeline {
 
 ```bash
 # SSH to EC2
-ssh -i your-key.pem ec2-user@44.201.162.249
+ssh -i your-key.pem ec2-user@100.30.102.67
 
 # Add cron job
 crontab -e
@@ -304,7 +304,7 @@ docker exec ai-devops-app bash -c "cd /app/kb-sync && python kb_sync_agent.py"
 
 | Variable | Example | Purpose |
 |----------|---------|---------|
-| `JENKINS_URL` | `http://44.201.162.249:8080` | Jenkins server URL |
+| `JENKINS_URL` | `http://100.30.102.67:8080` | Jenkins server URL |
 | `JENKINS_USER` | `admin` | Jenkins username |
 | `JENKINS_TOKEN` | `0b94...7101` | Jenkins API token |
 | `OPENAI_API_KEY` | `sk-proj-...` | OpenAI API access |
@@ -343,7 +343,7 @@ docker exec ai-devops-app bash -c "cd /app/kb-sync && python kb_sync_agent.py"
 After deployment:
 
 1. **Test RAG Chatbot**
-   - Go to http://44.201.162.249:8501
+   - Go to http://100.30.102.67:8501
    - Try asking DevOps questions
 
 2. **Populate Knowledge Base**
@@ -351,7 +351,7 @@ After deployment:
    - Run KB Sync: `docker exec ai-devops-app bash -c "cd /app/kb-sync && python kb_sync_agent.py"`
 
 3. **Monitor Logs**
-   - Jenkins: http://44.201.162.249:8080
+   - Jenkins: http://100.30.102.67:8080
    - S3 logs: `s3://jenkins-logs-aidevops-2026/`
    - Docker: `docker logs -f ai-devops-app`
 
@@ -368,8 +368,8 @@ After deployment:
 - [ ] Jenkins credentials configured (5 secrets)
 - [ ] Code pushed to GitHub
 - [ ] Jenkins pipeline ran successfully
-- [ ] Flask API responding: http://44.201.162.249:5000/health
-- [ ] Streamlit UI loaded: http://44.201.162.249:8501
+- [ ] Flask API responding: http://100.30.102.67:5000/health
+- [ ] Streamlit UI loaded: http://100.30.102.67:8501
 - [ ] RAG Chatbot working in Streamlit
 - [ ] KB Sync completed successfully
 - [ ] Knowledge base queries returning results
@@ -385,7 +385,7 @@ Your EC2 instance now runs:
 - ✅ RAG Chatbot (integrated)
 - ✅ KB Sync agent
 
-**Access**: http://44.201.162.249:8501
+**Access**: http://100.30.102.67:8501
 
 All running in **one Docker container** on your **existing EC2 instance**.
 

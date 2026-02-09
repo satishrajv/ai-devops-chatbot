@@ -8,7 +8,7 @@
 
 ## ⚡ Quick Start - EC2 Deployment (Your Setup)
 
-Deploy all 4 apps to your **existing EC2 instance** `44.201.162.249`:
+Deploy all 4 apps to your **existing EC2 instance** `100.30.102.67`:
 
 ```bash
 # 1. Configure Jenkins credentials (5 secrets)
@@ -18,7 +18,7 @@ git commit -m "Deploy full stack to EC2"
 git push origin main
 
 # 3. Jenkins auto-deploys
-# Access: http://44.201.162.249:8501
+# Access: http://100.30.102.67:8501
 ```
 
 **What you get**:
@@ -38,7 +38,7 @@ git push origin main
 
 A Streamlit-based dashboard to trigger and monitor Jenkins CI/CD pipelines, featuring an intelligent RAG (Retrieval-Augmented Generation) chatbot for DevOps troubleshooting.
 
-**Live on your EC2**: http://44.201.162.249:8501
+**Live on your EC2**: http://100.30.102.67:8501
 
 ## Project Structure
 

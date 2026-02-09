@@ -422,12 +422,14 @@ with tab5:
             send_button = st.button("Send 📤", type="primary", use_container_width=True)
 
         # Process question from example button click
+        from_example = False
         if 'pending_question' in st.session_state:
             user_input = st.session_state.pending_question
             del st.session_state.pending_question
+            from_example = True
 
-        # Handle user input
-        if (user_input and send_button) or (user_input and 'pending_question' in st.session_state):
+        # Handle user input (Send button click or example button)
+        if (user_input and send_button) or (user_input and from_example):
             # Add user message to history
             st.session_state.chat_messages.append({
                 "role": "user",

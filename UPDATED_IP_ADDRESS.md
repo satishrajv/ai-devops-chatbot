@@ -3,8 +3,8 @@
 ## 🔄 IP Address Changed
 
 Your EC2 instance IP address has changed:
-- **Old IP**: `35.174.138.165`
-- **New IP**: `44.201.162.249`
+- **Old IP**: `100.30.102.67`
+- **New IP**: `100.30.102.67`
 
 **Why?** When an EC2 instance is stopped and restarted, AWS assigns a new public IP address unless you have an Elastic IP attached.
 
@@ -16,22 +16,22 @@ Verified on Feb 1, 2026:
 
 | Service | Port | Status | URL |
 |---------|------|--------|-----|
-| **Jenkins** | 8080 | ✅ Running | http://44.201.162.249:8080 |
-| **Flask API** | 5000 | ✅ Healthy | http://44.201.162.249:5000 |
-| **Streamlit UI** | 8501 | ✅ Running | http://44.201.162.249:8501 |
+| **Jenkins** | 8080 | ✅ Running | http://100.30.102.67:8080 |
+| **Flask API** | 5000 | ✅ Healthy | http://100.30.102.67:5000 |
+| **Streamlit UI** | 8501 | ✅ Running | http://100.30.102.67:8501 |
 
 **Test Results:**
 ```bash
 # Flask API Health Check
-curl http://44.201.162.249:5000/health
+curl http://100.30.102.67:5000/health
 # Response: {"service":"flask-app","status":"healthy"}
 
 # Streamlit UI
-curl -I http://44.201.162.249:8501
+curl -I http://100.30.102.67:8501
 # Response: HTTP Status 200 ✓
 
 # Jenkins
-curl -I http://44.201.162.249:8080
+curl -I http://100.30.102.67:8080
 # Response: HTTP Status 403 (authentication required - normal)
 ```
 
@@ -40,7 +40,7 @@ curl -I http://44.201.162.249:8080
 ## 🌐 Access Your Applications
 
 ### Streamlit Dashboard (Main UI)
-**URL**: http://44.201.162.249:8501
+**URL**: http://100.30.102.67:8501
 
 Features:
 - Jenkins Dashboard
@@ -49,7 +49,7 @@ Features:
 - Log analysis
 
 ### Flask API
-**URL**: http://44.201.162.249:5000
+**URL**: http://100.30.102.67:5000
 
 Endpoints:
 - `/health` - Health check
@@ -57,7 +57,7 @@ Endpoints:
 - `/api/logs` - Fetch build logs
 
 ### Jenkins CI/CD
-**URL**: http://44.201.162.249:8080
+**URL**: http://100.30.102.67:8080
 
 Use your Jenkins credentials to log in.
 
@@ -134,7 +134,7 @@ Port 8501 (Streamlit) - Open to 0.0.0.0/0
 Instance ID:    i-0995816b4ea243430
 Instance Type:  m7i-flex.large
 State:          running
-Public IP:      44.201.162.249
+Public IP:      100.30.102.67
 Private IP:     172.31.85.192
 Name:           myec2_jenkins
 Region:         us-east-1
@@ -145,7 +145,7 @@ Security Group: sg-0c56c1da72e818832
 
 ## ✅ Next Steps
 
-1. **Test Streamlit UI**: Open http://44.201.162.249:8501 in your browser
+1. **Test Streamlit UI**: Open http://100.30.102.67:8501 in your browser
 2. **Test RAG Chatbot**: Ask a question in the Streamlit interface
 3. **Consider Elastic IP**: Prevent future IP changes (see above)
 4. **Update Bookmarks**: Save the new URLs in your browser

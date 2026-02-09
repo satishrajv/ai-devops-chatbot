@@ -33,6 +33,7 @@ class RAGRetrieverAgent:
         """
         logger.info(f"[RAG Retriever] Searching for top {top_k} chunks")
 
+        client = None
         try:
             # Connect to Weaviate
             client = weaviate.connect_to_weaviate_cloud(
@@ -71,8 +72,6 @@ class RAGRetrieverAgent:
 
                     logger.debug(f"Chunk {i+1}: {obj.properties['filename']} (distance: {distance:.4f})")
 
-            client.close()
-
             logger.info(f"Retrieved {len(retrieved_chunks)} chunks (threshold: {distance_threshold})")
 
             return {
@@ -84,3 +83,6 @@ class RAGRetrieverAgent:
         except Exception as e:
             logger.error(f"Error retrieving from Weaviate: {str(e)}", exc_info=True)
             raise
+        finally:
+            if client:
+                client.close()

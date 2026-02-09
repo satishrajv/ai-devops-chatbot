@@ -58,5 +58,5 @@ ENV ENVIRONMENT=production
 # Expose all ports
 EXPOSE 5000 8501
 
-# Start all services
-CMD ["./start.sh"]
+# Start all services (with AWS Secrets Manager)
+CMD ["./start-with-secrets.sh"]

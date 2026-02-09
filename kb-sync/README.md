@@ -142,7 +142,7 @@ python kb_sync_agent.py
 ### Manual Sync (EC2)
 
 ```bash
-ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@44.201.162.249
+ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@100.30.102.67
 cd /home/ubuntu/kb-sync
 ./sync.sh
 ```
@@ -151,26 +151,26 @@ cd /home/ubuntu/kb-sync
 
 ```bash
 # Real-time logs
-ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@44.201.162.249 'tail -f /home/ubuntu/kb-sync/cron.log'
+ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@100.30.102.67 'tail -f /home/ubuntu/kb-sync/cron.log'
 
 # View kb_sync.log
-ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@44.201.162.249 'tail -f /home/ubuntu/kb-sync/kb_sync.log'
+ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@100.30.102.67 'tail -f /home/ubuntu/kb-sync/kb_sync.log'
 ```
 
 ### Check Cron Status
 
 ```bash
-ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@44.201.162.249 'crontab -l | grep kb-sync'
+ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@100.30.102.67 'crontab -l | grep kb-sync'
 ```
 
 ### Manage Cron Job
 
 ```bash
 # Disable cron
-ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@44.201.162.249 'crontab -l | grep -v kb-sync | crontab -'
+ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@100.30.102.67 'crontab -l | grep -v kb-sync | crontab -'
 
 # Re-enable cron (every 5 minutes)
-ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@44.201.162.249 'bash /home/ubuntu/kb-sync/deploy.sh'
+ssh -i "C:\Users\Yashvi\myec2_jenkins.pem" ubuntu@100.30.102.67 'bash /home/ubuntu/kb-sync/deploy.sh'
 ```
 
 ## How It Works
@@ -291,10 +291,10 @@ client.close()
 ### Cron not running
 ```bash
 # Check cron service
-ssh -i "$PEM_FILE" ubuntu@44.201.162.249 'sudo systemctl status cron'
+ssh -i "$PEM_FILE" ubuntu@100.30.102.67 'sudo systemctl status cron'
 
 # View cron logs
-ssh -i "$PEM_FILE" ubuntu@44.201.162.249 'grep CRON /var/log/syslog | tail -20'
+ssh -i "$PEM_FILE" ubuntu@100.30.102.67 'grep CRON /var/log/syslog | tail -20'
 ```
 
 ## Adding New Documents
@@ -374,7 +374,7 @@ client.close()
 ## Support
 
 - **GitHub**: https://github.com/satishrajv/AI-DevOps-chatbot
-- **Jenkins**: http://44.201.162.249:8080
+- **Jenkins**: http://100.30.102.67:8080
 - **S3 Bucket**: s3://jenkins-kb
 
 ## License

@@ -248,7 +248,7 @@ with tab2:
 
 ## 🔄 Complete Request Flow
 
-### **When User Accesses Flask (http://44.201.162.249:5000/health):**
+### **When User Accesses Flask (http://100.30.102.67:5000/health):**
 
 ```
 User Browser
@@ -263,7 +263,7 @@ Returns JSON: {"status": "healthy", "service": "flask-app"}
 User sees: JSON response
 ```
 
-### **When User Accesses Streamlit (http://44.201.162.249:8501):**
+### **When User Accesses Streamlit (http://100.30.102.67:8501):**
 
 ```
 User Browser
@@ -349,8 +349,8 @@ streamlit_app/app.py (SIXTH - Streamlit starts in foreground)
 4. ✅ Both apps now running and accepting requests
 
 ### **User Interaction:**
-- User visits Flask: http://44.201.162.249:5000 → Flask handles request
-- User visits Streamlit: http://44.201.162.249:8501 → Streamlit handles request
+- User visits Flask: http://100.30.102.67:5000 → Flask handles request
+- User visits Streamlit: http://100.30.102.67:8501 → Streamlit handles request
 - Streamlit can call Jenkins API to trigger builds
 - Jenkins builds run this entire cycle again!
 

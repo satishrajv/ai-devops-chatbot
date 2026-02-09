@@ -6,15 +6,20 @@ echo "=========================================="
 
 # Fetch secrets from AWS Secrets Manager and export as environment variables
 echo "✓ Fetching credentials from AWS Secrets Manager..."
-eval $(python3 /app/scripts/fetch_secrets.py)
+SECRETS_OUTPUT=$(python3 /app/scripts/fetch_secrets.py 2>/tmp/secrets_error.log)
+SECRETS_EXIT_CODE=$?
 
-if [ $? -ne 0 ]; then
+if [ $SECRETS_EXIT_CODE -ne 0 ] || [ -z "$SECRETS_OUTPUT" ]; then
     echo "❌ Failed to fetch secrets from AWS Secrets Manager"
+    echo "   Exit code: $SECRETS_EXIT_CODE"
+    cat /tmp/secrets_error.log 2>/dev/null
     echo "   Make sure:"
     echo "   1. EC2 instance has IAM role with secretsmanager:GetSecretValue permission"
     echo "   2. Secret 'ai-devops-platform/credentials' exists in Secrets Manager"
     exit 1
 fi
+
+eval "$SECRETS_OUTPUT"
 
 echo "✓ Credentials loaded successfully"
 

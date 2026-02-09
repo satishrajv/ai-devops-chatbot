@@ -41,8 +41,8 @@ When this error occurs, you will observe:
 - ❌ Container **starts** but crashes within 10-30 seconds
 - ❌ Docker logs show memory allocation failures
 - ❌ Application becomes **unresponsive** immediately
-- ❌ Health checks **fail** at `http://44.201.162.249:5000/health`
-- ❌ Streamlit UI unreachable at `http://44.201.162.249:8501`
+- ❌ Health checks **fail** at `http://100.30.102.67:5000/health`
+- ❌ Streamlit UI unreachable at `http://100.30.102.67:8501`
 - ❌ Previous container stopped, new container fails to stay running
 
 **Build Status in Jenkins**: 🔴 FAILURE (at Health Check stage)
@@ -201,7 +201,7 @@ git push origin main
 
 **Step 3**: Trigger new Jenkins build
 
-Go to http://44.201.162.249:8080 and click "Build Now"
+Go to http://100.30.102.67:8080 and click "Build Now"
 
 **Expected Result**: ✅ Build succeeds, application runs normally
 
@@ -492,7 +492,7 @@ MemoryError: Unable to allocate 2.8 GiB for array
 
 #### Internal Resources
 - Project Repository: https://github.com/satishrajv/AI-DevOps-chatbot
-- Jenkins Dashboard: http://44.201.162.249:8080
+- Jenkins Dashboard: http://100.30.102.67:8080
 - S3 Logs: s3://jenkins-logs-aidevops-2026/jenkins/failures/
 
 #### Tools

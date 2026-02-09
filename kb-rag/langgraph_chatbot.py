@@ -97,7 +97,7 @@ def rag_retriever_node(state: ChatbotState) -> ChatbotState:
         agent = RAGRetrieverAgent(
             weaviate_url=os.getenv("WEAVIATE_URL"),
             weaviate_api_key=os.getenv("WEAVIATE_API_KEY"),
-            collection_name=os.getenv("WEAVIATE_COLLECTION_NAME", "JenkinsKB")
+            collection_name=os.getenv("WEAVIATE_COLLECTION_NAME", "JenkinsKnowledgeBase")
         )
 
         # Retrieve chunks (using config values)

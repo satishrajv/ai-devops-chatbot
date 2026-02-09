@@ -87,14 +87,14 @@ echo "Step 6: Finding EC2 instance..."
 
 # Get instance ID by IP
 INSTANCE_ID=$(aws ec2 describe-instances \
-    --filters "Name=private-ip-address,Values=44.201.162.249" \
+    --filters "Name=private-ip-address,Values=100.30.102.67" \
     --query 'Reservations[0].Instances[0].InstanceId' \
     --output text)
 
 if [ "$INSTANCE_ID" = "None" ] || [ -z "$INSTANCE_ID" ]; then
     # Try public IP
     INSTANCE_ID=$(aws ec2 describe-instances \
-        --filters "Name=ip-address,Values=44.201.162.249" \
+        --filters "Name=ip-address,Values=100.30.102.67" \
         --query 'Reservations[0].Instances[0].InstanceId' \
         --output text)
 fi

@@ -107,7 +107,7 @@ Your EC2 instance needs permission to read the secret.
 ### Attach Role to EC2 Instance:
 
 1. Go to: https://console.aws.amazon.com/ec2/
-2. Select your EC2 instance (44.201.162.249)
+2. Select your EC2 instance (100.30.102.67)
 3. Click **Actions** → **Security** → **Modify IAM role**
 4. Select `AiDevOpsPlatformRole`
 5. Click **Update IAM role**
@@ -177,7 +177,7 @@ export WEAVIATE_URL="https://..."
 
 ### Test 3: Deploy via Jenkins
 
-1. Go to: http://44.201.162.249:8080
+1. Go to: http://100.30.102.67:8080
 2. Click **Build Now**
 3. Watch **Console Output**
 4. Look for: `✓ Credentials loaded successfully`

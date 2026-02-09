@@ -26,7 +26,7 @@
 **How to view:**
 ```bash
 # SSH to EC2
-ssh -i "myec2_jenkins.pem" ubuntu@44.201.162.249
+ssh -i "myec2_jenkins.pem" ubuntu@100.30.102.67
 
 # View specific build log
 sudo cat /var/lib/jenkins/jobs/ai-devops-pipeline/builds/4/log
@@ -40,7 +40,7 @@ sudo tail -f /var/lib/jenkins/jobs/ai-devops-pipeline/builds/lastBuild/log
 
 **Via Web UI:**
 ```
-http://44.201.162.249:8080/job/ai-devops-pipeline/4/console
+http://100.30.102.67:8080/job/ai-devops-pipeline/4/console
 ```
 
 ---
@@ -72,7 +72,7 @@ sudo tail -50 /var/log/jenkins/jenkins.log
 
 **Via Web UI:**
 ```
-http://44.201.162.249:8080/log/all
+http://100.30.102.67:8080/log/all
 ```
 
 ---
@@ -320,9 +320,9 @@ sudo netstat -tulpn | grep 8501
 
 **From browser:**
 ```
-http://44.201.162.249:5000/health
-http://44.201.162.249:5000/api/info
-http://44.201.162.249:8501
+http://100.30.102.67:5000/health
+http://100.30.102.67:5000/api/info
+http://100.30.102.67:8501
 ```
 
 ---
@@ -529,7 +529,7 @@ sudo tail -f /var/lib/jenkins/jobs/ai-devops-pipeline/builds/lastBuild/log
 sudo tail -f /var/log/jenkins/jenkins.log
 
 # Via browser
-# http://44.201.162.249:8080/job/ai-devops-pipeline/4/console
+# http://100.30.102.67:8080/job/ai-devops-pipeline/4/console
 ```
 
 ---

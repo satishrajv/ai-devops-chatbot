@@ -170,7 +170,7 @@ nano kb-sync/.env
 **Problem**:
 ```python
 # streamlit_app/app.py lines 23-26 (OLD)
-jenkins_url = "http://44.201.162.249:8080"
+jenkins_url = "http://100.30.102.67:8080"
 jenkins_user = "admin"
 jenkins_token = "0b94639151854a66bf03c6467e5a7101"
 ```
@@ -193,7 +193,7 @@ if not jenkins_user or not jenkins_token:
 **Action Required** (User must do):
 ```bash
 # Rotate Jenkins token
-# 1. Login to Jenkins: http://44.201.162.249:8080
+# 1. Login to Jenkins: http://100.30.102.67:8080
 # 2. Revoke token: 0b94639151854a66bf03c6467e5a7101
 # 3. Generate new token
 # 4. Add to .env file
@@ -432,7 +432,7 @@ logs/
 
 ```python
 # streamlit_app/app.py
-jenkins_url = "http://44.201.162.249:8080"
+jenkins_url = "http://100.30.102.67:8080"
 jenkins_user = "admin"
 jenkins_token = "0b94639151854a66bf03c6467e5a7101"  # EXPOSED!
 ```
@@ -460,7 +460,7 @@ if not all([jenkins_url, jenkins_user, jenkins_token]):
 
 ```bash
 # .env (LOCAL ONLY, NOT IN GIT)
-JENKINS_URL=http://44.201.162.249:8080
+JENKINS_URL=http://100.30.102.67:8080
 JENKINS_USER=admin
 JENKINS_TOKEN=<your_new_rotated_token>
 OPENAI_API_KEY=<your_new_rotated_key>
